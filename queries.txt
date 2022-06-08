@@ -1,0 +1,58 @@
+/* The Most Used Media Type For Rock Music */
+
+SELECT MediaType.Name, Count(*) AS Num_of_Events
+FROM Track
+JOIN MediaType
+ON Track.MediaTypeId = MediaType.MediaTypeId
+WHERE Track.GenreId = 1
+GROUP BY MediaType.Name
+ORDER BY 2 DESC
+
+
+
+/* Bands With The Highest Earnings */
+
+SELECT Artist.Name, SUM(InvoiceLine.Quantity * InvoiceLine.UnitPrice) AS Earnings
+FROM Artist
+JOIN Album
+ON Artist.ArtistId = Album.ArtistId
+JOIN Track
+ON Track.AlbumId = Album.AlbumId
+JOIN InvoiceLine
+ON Track.TrackId = InvoiceLine.TrackId
+GROUP BY 1
+ORDER BY 2 DESC
+LIMIT 5
+
+
+
+/* The Top Pop Album by Number of Songs’ Purchases */
+
+SELECT Album.Title, Artist.Name, Count(InvoiceLine.TrackId) AS Num_of_Purchases
+FROM InvoiceLine
+JOIN Track
+ON InvoiceLine.TrackId = Track.TrackId
+JOIN Album
+ON Album.AlbumId = Track.AlbumId
+Join Artist
+ON Artist.ArtistId = Album.ArtistId
+Where Track.GenreId = 9
+GROUP BY Album.Title
+ORDER BY 3 DESC 
+
+		
+
+/* #1 Music Genre in USA */
+	
+SELECT Invoice.BillingCountry, Genre.Name, Count(*) AS Num_of_purchases
+From Invoice
+JOIN InvoiceLine
+ON Invoice.InvoiceId = InvoiceLine.InvoiceId
+JOIN Track
+ON Track.TrackId = InvoiceLine.TrackId
+JOIN Genre
+ON Track.GenreId = Genre.GenreId
+Where Invoice.BillingCountry LIKE "USA"
+GROUP BY 2
+ORDER BY 3 DESC
+LIMIT 10
